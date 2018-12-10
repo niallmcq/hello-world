@@ -1,18 +1,21 @@
 package com.niallmcq.hello.world.service;
 
-import com.niallmcq.hello.world.entity.User;
+import com.niallmcq.hello.world.request.CreateUserRequest;
+import com.niallmcq.hello.world.request.UpdateUserRequest;
+import com.niallmcq.hello.world.response.UserResponse;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 public interface UserService {
 
-    User createUser(final User user);
+    UserResponse createUser(CreateUserRequest createUserRequest);
 
-    List<User> getUsers();
+    List<UserResponse> getAllUsers(Pageable pageable);
 
-    User getUser(final Long userId);
+    UserResponse getUser(Long userId);
 
-    void updateUser(final Long userId, final User user);
+    void updateUser(Long userId, UpdateUserRequest updateUserRequest);
 
-    void deleteUser(final Long userId);
+    void deleteUser(Long userId);
 }

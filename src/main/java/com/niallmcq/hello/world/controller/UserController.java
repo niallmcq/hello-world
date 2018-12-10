@@ -1,8 +1,12 @@
 package com.niallmcq.hello.world.controller;
 
-import com.niallmcq.hello.world.entity.User;
+import com.niallmcq.hello.world.request.CreateUserRequest;
+import com.niallmcq.hello.world.request.UpdateUserRequest;
+import com.niallmcq.hello.world.response.UserResponse;
 import com.niallmcq.hello.world.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,26 +29,26 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public User createUser(final User user) {
-        return userService.createUser(user);
+    public UserResponse createUser(@RequestBody final CreateUserRequest createUserRequest) {
+        return userService.createUser(createUserRequest);
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<User> getUsers() {
-        return userService.getUsers();
+    public List<UserResponse> getAllUsers(@PageableDefault final Pageable pageable) {
+        return userService.getAllUsers(pageable);
     }
 
     @GetMapping(value = "{userId}")
     @ResponseStatus(HttpStatus.OK)
-    public User getUser(@PathVariable("userId") final Long userId) {
+    public UserResponse getUser(@PathVariable("userId") final Long userId) {
         return userService.getUser(userId);
     }
 
     @PutMapping(value = "{userId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateUser(@PathVariable("userId") final Long userId, @RequestBody final User user) {
-        userService.updateUser(userId, user);
+    public void updateUser(@PathVariable("userId") final Long userId, @RequestBody final UpdateUserRequest updateUserRequest) {
+        userService.updateUser(userId, updateUserRequest);
     }
 
     @DeleteMapping(value = "{userId}")

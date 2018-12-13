@@ -36,8 +36,6 @@ public class UserControllerTest {
     @Test
     public void hitCreateEndpoint() throws Exception {
         final CreateUserRequest createUserRequest = new CreateUserRequest();
-        createUserRequest.setForename("Joe");
-        createUserRequest.setSurname("Bloggs");
 
         mockMvc.perform(
                 post("/users")
@@ -79,8 +77,6 @@ public class UserControllerTest {
         final long userId = 123L;
 
         final UpdateUserRequest updateUserRequest = new UpdateUserRequest();
-        updateUserRequest.setForename("Joe");
-        updateUserRequest.setSurname("Bloggs");
 
         mockMvc.perform(
                 put("/users/" + userId)

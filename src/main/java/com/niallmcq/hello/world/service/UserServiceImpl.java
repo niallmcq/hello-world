@@ -10,6 +10,9 @@ import com.niallmcq.hello.world.request.UserRequest;
 import com.niallmcq.hello.world.response.UserResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,7 +21,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserDetailsService, UserService {
 
     @Autowired
     private UserRepository userRepository;
@@ -76,5 +79,14 @@ public class UserServiceImpl implements UserService {
 
     private UserResponse convertToResponse(final User user) {
         return userMapper.entityToResponse(user);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        final User user = userRepository.findByUsername(username);
+        if (Objects.nonNull(user)) {
+            return user;
+        }
+        throw new UsernameNotFoundException(username);
     }
 }

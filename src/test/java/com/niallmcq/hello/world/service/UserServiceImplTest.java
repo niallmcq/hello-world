@@ -45,20 +45,14 @@ public class UserServiceImplTest {
     public void setUp() {
         user = new User();
         user.setId(userId);
-        user.setForename(forename);
-        user.setSurname(surname);
     }
 
     @Test
     public void shouldCreateUser() {
         final CreateUserRequest createUserRequest = new CreateUserRequest();
-        createUserRequest.setForename(forename);
-        createUserRequest.setSurname(surname);
 
         final UserResponse userResponse = new UserResponse();
         userResponse.setId(userId);
-        userResponse.setForename(forename);
-        userResponse.setSurname(surname);
 
         when(userMapper.requestToEntity(createUserRequest)).thenReturn(user);
         when(userRepository.save(user)).thenReturn(user);
@@ -72,8 +66,6 @@ public class UserServiceImplTest {
     public void shouldGetAllUsers() {
         final UserResponse userResponse = new UserResponse();
         userResponse.setId(userId);
-        userResponse.setForename(forename);
-        userResponse.setSurname(surname);
 
         when(userRepository.findAll()).thenReturn(Collections.singletonList(user));
         when(userMapper.entityToResponse(user)).thenReturn(userResponse);
@@ -85,8 +77,6 @@ public class UserServiceImplTest {
     public void shouldGetUser() {
         final UserResponse userResponse = new UserResponse();
         userResponse.setId(userId);
-        userResponse.setForename(forename);
-        userResponse.setSurname(surname);
 
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
         when(userMapper.entityToResponse(user)).thenReturn(userResponse);
@@ -97,8 +87,6 @@ public class UserServiceImplTest {
     @Test
     public void shouldUpdateUser() {
         final UpdateUserRequest updateUserRequest = new UpdateUserRequest();
-        updateUserRequest.setForename(forename);
-        updateUserRequest.setSurname(surname);
 
         when(userRepository.getOne(userId)).thenReturn(user);
         when(userMapper.requestToEntity(updateUserRequest)).thenReturn(user);

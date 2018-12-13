@@ -5,18 +5,189 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
 
-    <changeSet author="Niall McQuillan" id="user-1">
-        <createTable tableName="User">
-            <column name="Id" type="BIGINT" autoIncrement="true">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="User_PK"/>
+    <!-- OAuth2 tables -->
+    <changeSet author="Niall McQuillan" id="user-service-1">
+        <createTable tableName="oauth_client_details">
+            <column name="client_id" type="BIGINT" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="oauth_client_details_pk"/>
             </column>
-            <column name="Forename" type="VARCHAR(255)">
+            <column name="resource_ids" type="VARCHAR(255)"></column>
+            <column name="client_secret" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="Surname" type="VARCHAR(255)">
+            <column name="scope" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="authorized_grant_types" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="web_server_redirect_uri" type="VARCHAR(255)"></column>
+            <column name="authorities" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="access_token_validity" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="refresh_token_validity" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="additional_information" type="VARCHAR(4096)"></column>
+            <column name="autoapprove" type="VARCHAR(255)"></column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="Niall McQuillan" id="user-service-2">
+        <createTable tableName="oauth_client_token">
+            <column name="authentication_id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="oauth_client_token_pk"/>
+            </column>
+            <column name="token_id" type="VARCHAR(255)"></column>
+            <column name="token" type="MEDIUMBLOB"></column>
+            <column name="user_name" type="VARCHAR(255)"></column>
+            <column name="client_id" type="VARCHAR(255)"></column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="Niall McQuillan" id="user-service-3">
+        <createTable tableName="oauth_access_token">
+            <column name="authentication_id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="oauth_access_token_pk"/>
+            </column>
+            <column name="token_id" type="VARCHAR(255)"></column>
+            <column name="token" type="MEDIUMBLOB"></column>
+            <column name="user_name" type="VARCHAR(255)"></column>
+            <column name="client_id" type="VARCHAR(255)"></column>
+            <column name="authentication" type="MEDIUMBLOB"></column>
+            <column name="refresh_token" type="VARCHAR(255)"></column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="Niall McQuillan" id="user-service-4">
+        <createTable tableName="oauth_refresh_token">
+            <column name="token_id" type="VARCHAR(255)"></column>
+            <column name="token" type="MEDIUMBLOB"></column>
+            <column name="authentication" type="MEDIUMBLOB"></column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="Niall McQuillan" id="user-service-5">
+        <createTable tableName="oauth_code">
+            <column name="code" type="VARCHAR(255)"></column>
+            <column name="authentication" type="MEDIUMBLOB"></column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="Niall McQuillan" id="user-service-6">
+        <createTable tableName="oauth_approvals">
+            <column name="userId" type="VARCHAR(255)"></column>
+            <column name="clientId" type="VARCHAR(255)"></column>
+            <column name="scope" type="VARCHAR(255)"></column>
+            <column name="status" type="VARCHAR(10)"></column>
+            <column name="expiresAt" type="TIMESTAMP"></column>
+            <column name="lastModifiedAt" type="TIMESTAMP"></column>
+        </createTable>
+    </changeSet>
+
+    <!-- Populate table with client - remove when concrete DB is implemented -->
+    <changeSet author="Niall McQuillan" id="user-service-7">
+        <insert tableName="oauth_client_details">
+            <column name="client_secret" value="P@55w0rd"></column>
+            <column name="scope" value="read, write"></column>
+            <column name="authorized_grant_types" value="authorization_code, implicit, password, client_credentials, refresh_token"></column>
+            <column name="authorities" value="ROLE_ADMIN, ROLE_USER"></column>
+            <column name="access_token_validity" value="604800"></column>
+            <column name="refresh_token_validity" value="604800"></column>
+            <column name="autoapprove" value="true"></column>
+        </insert>
+    </changeSet>
+    <!-- OAuth2 tables -->
+
+    <changeSet author="Niall McQuillan" id="user-service-8">
+        <createTable tableName="user">
+            <column name="user_id" type="BIGINT" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="user_pk"/>
+            </column>
+            <column name="password" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="username" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="account_expired" type="BOOLEAN" defaultValue="false"></column>
+            <column name="account_locked" type="BOOLEAN" defaultValue="false"></column>
+            <column name="credentials_expired" type="BOOLEAN" defaultValue="false"></column>
+            <column name="enabled" type="BOOLEAN" defaultValue="true"></column>
+        </createTable>
+    </changeSet>
+
+    <!-- Populate table with user - remove when concrete DB is implemented -->
+    <changeSet author="Niall McQuillan" id="user-service-9">
+        <insert tableName="user">
+            <column name="password" value="P@55w0rd"></column>
+            <column name="username" value="niallmcq"></column>
+        </insert>
+    </changeSet>
+
+    <changeSet author="Niall McQuillan" id="user-service-10">
+        <createTable tableName="authority">
+            <column name="authority_id" type="BIGINT" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="authority_pk"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
         </createTable>
+    </changeSet>
+
+    <!-- Populate table with authority - remove when concrete DB is implemented -->
+    <changeSet author="Niall McQuillan" id="user-service-11">
+        <insert tableName="authority">
+            <column name="name" value="read"></column>
+        </insert>
+        <insert tableName="authority">
+            <column name="name" value="write"></column>
+        </insert>
+    </changeSet>
+
+    <changeSet author="Niall McQuillan" id="user-service-12">
+        <createTable tableName="user_authority_composite">
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="authority_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseColumnNames="user_id"
+                                 baseTableName="user_authority_composite"
+                                 constraintName="user_to_user_authority_composite_fk"
+                                 deferrable="false"
+                                 initiallyDeferred="false"
+                                 onDelete="RESTRICT"
+                                 referencedColumnNames="user_id"
+                                 referencedTableName="user"
+                                 referencesUniqueColumn="false"/>
+        <addForeignKeyConstraint baseColumnNames="user_id"
+                                 baseTableName="user_authority_composite"
+                                 constraintName="authority_to_user_authority_composite_fk"
+                                 deferrable="false"
+                                 initiallyDeferred="false"
+                                 onDelete="RESTRICT"
+                                 referencedColumnNames="authority_id"
+                                 referencedTableName="authority"
+                                 referencesUniqueColumn="false"/>
+    </changeSet>
+
+    <!-- Populate table with user authority composite - remove when concrete DB is implemented -->
+    <changeSet author="Niall McQuillan" id="user-service-13">
+        <insert tableName="user_authority_composite">
+            <column name="user_id" value="1"></column>
+            <column name="authority_id" value="1"></column>
+        </insert>
+        <insert tableName="user_authority_composite">
+            <column name="user_id" value="1"></column>
+            <column name="authority_id" value="2"></column>
+        </insert>
     </changeSet>
 
 </databaseChangeLog>

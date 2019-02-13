@@ -91,9 +91,10 @@
     <!-- Populate table with client - remove when concrete DB is implemented -->
     <changeSet author="Niall McQuillan" id="user-service-7">
         <insert tableName="oauth_client_details">
-            <column name="client_secret" value="P@55w0rd"></column>
-            <column name="scope" value="read, write"></column>
-            <column name="authorized_grant_types" value="authorization_code, implicit, password, client_credentials, refresh_token"></column>
+            <!-- 'client' encrypted with Bcrypt (4 rounds) -->
+            <column name="client_secret" value="$2a$04$VkKsuGvNBRIFKhajT3KRBu0kcmHXBAvHCfhYyubCvYbFTrJTmShte"></column>
+            <column name="scope" value="read,write"></column>
+            <column name="authorized_grant_types" value="authorization_code,implicit,password,client_credentials,refresh_token"></column>
             <column name="authorities" value="ROLE_ADMIN, ROLE_USER"></column>
             <column name="access_token_validity" value="604800"></column>
             <column name="refresh_token_validity" value="604800"></column>
@@ -113,9 +114,9 @@
             <column name="username" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="account_expired" type="BOOLEAN" defaultValue="false"></column>
-            <column name="account_locked" type="BOOLEAN" defaultValue="false"></column>
-            <column name="credentials_expired" type="BOOLEAN" defaultValue="false"></column>
+            <column name="account_non_expired" type="BOOLEAN" defaultValue="true"></column>
+            <column name="account_non_locked" type="BOOLEAN" defaultValue="true"></column>
+            <column name="credentials_non_expired" type="BOOLEAN" defaultValue="true"></column>
             <column name="enabled" type="BOOLEAN" defaultValue="true"></column>
         </createTable>
     </changeSet>
@@ -123,7 +124,8 @@
     <!-- Populate table with user - remove when concrete DB is implemented -->
     <changeSet author="Niall McQuillan" id="user-service-9">
         <insert tableName="user">
-            <column name="password" value="P@55w0rd"></column>
+            <!-- 'user' encrypted with Bcrypt (8 rounds) -->
+            <column name="password" value="$2a$08$FMhv.2zR.6iLGM4OO8ZQLu6gBcXe/FDSoWbiQ7P5QAmXbpSWKfmy6"></column>
             <column name="username" value="niallmcq"></column>
         </insert>
     </changeSet>
@@ -142,10 +144,10 @@
     <!-- Populate table with authority - remove when concrete DB is implemented -->
     <changeSet author="Niall McQuillan" id="user-service-11">
         <insert tableName="authority">
-            <column name="name" value="read"></column>
+            <column name="name" value="ROLE_ADMIN"></column>
         </insert>
         <insert tableName="authority">
-            <column name="name" value="write"></column>
+            <column name="name" value="ROLE_USER"></column>
         </insert>
     </changeSet>
 
